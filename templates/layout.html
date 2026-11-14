@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ page_title }}</title>
+  <meta name="description" content="{{ meta_desc }}">
+  <meta name="robots" content="{{ meta_robots | default('index, follow') }}">
+  <link rel="canonical" href="{{ canonical }}">
+  <meta property="og:locale" content="id_ID">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{ page_title }}">
+  <meta property="og:description" content="{{ meta_desc }}">
+  <meta property="og:url" content="{{ canonical }}">
+  <meta property="og:site_name" content="{{ site_name }}">
+  {% if og_image %}<meta property="og:image" content="{{ og_image }}">{% endif %}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ page_title }}">
+  <meta name="twitter:description" content="{{ meta_desc }}">
+  {% if og_image %}<meta name="twitter:image" content="{{ og_image }}">{% endif %}
+  {% if json_ld %}<script type="application/ld+json">{{ json_ld | safe }}</script>{% endif %}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <style>
+    :root {
+      --background-color:#f8f8f8;--main-color:#222d34;--link-color-body:#222d34;
+      --hoverlink-color-body:{{ theme_color }};--border-color:#ddd;--header-bgcolor:#fff;
+      --topnav-color:#222;--slide-bgcolor:#efefef;--mainmenu-color:#222d34;
+      --mainmenu-hovercolor:{{ theme_color }};--content-bgcolor:#fff;--content-greycolor:#949cb0;
+      --button-bgcolor:{{ theme_color }};--button-color:#fff;--footer-bgcolor:#f0f0f0;
+      --footer-color:#666;--footer-linkcolor:#666;--footer-hover-linkcolor:{{ theme_color }};
+      --titledesc-bgcolor:#eee;--scheme-color:{{ theme_color }};
+    }
+    body.dark-theme {
+      --background-color:#111;--main-color:#efefef;--link-color-body:#fff;
+      --border-color:#333;--header-bgcolor:#1f1f1f;--topnav-color:#fff;--slide-bgcolor:#181818;
+      --mainmenu-color:#eee;--content-bgcolor:#1c1c1c;--content-greycolor:#a0a6b5;
+      --footer-bgcolor:#161616;--footer-color:#888;--footer-linkcolor:#ccc;--titledesc-bgcolor:#282828;
+    }
+    *,*::before,*::after{box-sizing:border-box}
+    body{margin:0;font-family:'Open Sans',system-ui,sans-serif;font-size:14px;line-height:1.5;color:var(--main-color);background:var(--background-color);overflow-x:hidden}
+    a{color:var(--link-color-body);text-decoration:none}a:hover{color:var(--hoverlink-color-body)}
+    img{max-width:100%;height:auto;border:0}h1,h2,h3{margin:0 0 10px;line-height:1.3}
+    ul{margin:0;padding:0;list-style:none}
+    .material-symbols-outlined{font-family:'Material Symbols Outlined';font-size:20px;vertical-align:middle}
+    .container{width:100%;padding:0 15px;margin:0 auto}
+    @media(min-width:768px){.container{max-width:728px}}
+    @media(min-width:992px){.container{max-width:952px}}
+    @media(min-width:1200px){.container{max-width:1180px}}
+    .row{display:flex;flex-wrap:wrap;margin:0 -8px}
+    .col-md-9,.col-md-3{flex:0 0 100%;max-width:100%;padding:0 8px}
+    @media(min-width:992px){.col-md-9{flex:0 0 75%;max-width:75%}.col-md-3{flex:0 0 25%;max-width:25%}}
+    .col-md-grid{flex:0 0 100%;max-width:100%;padding:0 8px;margin-bottom:20px}
+    @media(min-width:600px){.col-md-grid{flex:0 0 50%;max-width:50%}}
+    @media(min-width:992px){.col-md-grid{flex:0 0 33.333%;max-width:33.333%}}
+    .gmr-topnavwrap{background:var(--header-bgcolor);box-shadow:0 3px 6px rgba(0,0,0,.08);position:sticky;top:0;z-index:1000}
+    .gmr-flex-topnav{display:flex;align-items:center;min-height:60px;padding:0 15px}
+    .pull-right{margin-left:auto;display:flex;align-items:center}
+    .gmr-logo-link{display:inline-flex;align-items:center;gap:8px}
+    .gmr-logo-badge{background:var(--scheme-color);color:#fff;font-weight:700;font-size:15px;padding:3px 8px;border-radius:4px}
+    .gmr-logo-text{font-size:20px;font-weight:700;color:var(--topnav-color)}
+    .gmr-mainmenu-wrap{margin-left:20px}
+    .gmr-mainmenu ul{display:flex;gap:12px}
+    .gmr-mainmenu a{font-size:13px;font-weight:600;color:var(--mainmenu-color);display:inline-flex;align-items:center;gap:4px;padding:8px 4px}
+    .gmr-mainmenu a:hover{color:var(--mainmenu-hovercolor)}
+    .gmr-searchform{position:relative;display:flex}
+    .gmr-searchform input{width:220px;height:36px;padding:6px 36px 6px 14px;background:var(--titledesc-bgcolor);border:1px solid transparent;border-radius:20px;color:var(--main-color);outline:none}
+    .gmr-searchform input:focus{width:280px;border-color:var(--scheme-color)}
+    .gmr-search-submit{position:absolute;right:4px;top:50%;transform:translateY(-50%);background:0;border:0;cursor:pointer;color:var(--content-greycolor)}
+    .topnav-button{background:0;border:0;color:var(--topnav-color);width:36px;height:36px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;margin-left:6px}
+    .topnav-button:hover{background:var(--titledesc-bgcolor);color:var(--scheme-color)}
+    #gmr-responsive-menu{display:none}
+    @media(max-width:1200px){.gmr-mainmenu-wrap,.gmr-table-search{display:none!important}#gmr-responsive-menu{display:inline-flex!important}}
+    .gmr-content{padding:30px 0}
+    .post-thumbnail{position:relative;display:block;width:100%;aspect-ratio:16/9;background:var(--titledesc-bgcolor);overflow:hidden;border-radius:6px}
+    .post-thumbnail img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .3s}
+    .post-thumbnail:hover img{transform:scale(1.05)}
+    .gmr-format{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;opacity:0;pointer-events:none;transition:opacity .2s}
+    .gmr-format .material-symbols-outlined{font-size:48px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.6))}
+    .post-thumbnail:hover .gmr-format{opacity:1}
+    .duration,.view-on-image{position:absolute;bottom:8px;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:700;background:rgba(0,0,0,.7);color:#fff;display:inline-flex;align-items:center;gap:3px;z-index:2}
+    .duration{right:8px}.view-on-image{left:8px}
+    .list-gallery-title{position:absolute;bottom:0;left:0;right:0;padding:30px 10px 8px;background:linear-gradient(to top,rgba(0,0,0,.85),transparent);color:#fff;font-size:13px;font-weight:600;margin:0;z-index:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .box-item{background:var(--content-bgcolor);border:1px solid var(--border-color);border-radius:6px;overflow:hidden;height:100%;display:flex;flex-direction:column;transition:box-shadow .2s,transform .2s}
+    .box-item:hover{box-shadow:0 4px 12px rgba(0,0,0,.08);transform:translateY(-2px)}
+    .box-content{padding:12px;display:flex;flex-direction:column;flex:1}
+    .entry-title{font-size:14px;font-weight:700;line-height:1.35;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .meta-content{font-size:12px;color:var(--content-greycolor);margin-top:auto}
+    .widget-title,.page-title{font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding-bottom:8px;margin-bottom:16px;position:relative;border-bottom:1px solid var(--border-color)}
+    .widget-title::after,.page-title::after{content:'';position:absolute;bottom:-1px;left:0;width:45px;height:2px;background:var(--scheme-color)}
+    .vidpro-rp-widget li{display:flex;gap:10px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border-color)}
+    .vidpro-rp-widget li:last-child{border:0;margin:0;padding:0}
+    .vidpro-rp-widget .post-thumbnail{width:110px;height:62px;flex-shrink:0;border-radius:4px;aspect-ratio:auto}
+    .recent-title{font-size:13px;font-weight:600;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .pos-sticky{position:sticky;top:80px}
+    .view-more-button,.btn-primary{background:var(--button-bgcolor);color:var(--button-color);border:0;padding:10px 24px;border-radius:20px;font-weight:600;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+    .view-more-button:hover{opacity:.9;color:#fff}
+    .btn-outline{background:0;border:1px solid var(--border-color);color:var(--main-color);padding:10px 20px;border-radius:20px;font-weight:600;font-size:13px;display:inline-flex;align-items:center;gap:6px}
+    .pagination{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:28px 0}
+    .pagination a,.pagination span{padding:8px 14px;border-radius:6px;background:var(--content-bgcolor);border:1px solid var(--border-color);color:var(--main-color);font-size:.9rem}
+    .pagination a:hover{background:var(--scheme-color);border-color:var(--scheme-color);color:#fff}
+    .pagination .active{background:var(--scheme-color);border-color:var(--scheme-color);color:#fff}
+    .tags{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px}
+    .tag{padding:6px 12px;background:var(--content-bgcolor);border:1px solid var(--border-color);border-radius:20px;font-size:.85rem;color:var(--content-greycolor)}
+    .tag:hover{border-color:var(--scheme-color);color:var(--scheme-color)}
+    .video-player{background:#000;border-radius:8px;overflow:hidden;margin-bottom:20px;aspect-ratio:16/9}
+    .video-player iframe{width:100%;height:100%;border:0}
+    .header-slide{background:var(--slide-bgcolor);padding:20px 0}
+    .slider-track{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px}
+    .slider-item{flex:0 0 85%;scroll-snap-align:start}
+    @media(min-width:600px){.slider-item{flex:0 0 48%}}
+    @media(min-width:992px){.slider-item{flex:0 0 32%}}
+    .sidr-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9998}
+    .sidr-overlay.active{display:block}
+    .sidr{position:fixed;top:0;left:-300px;width:280px;max-width:85vw;height:100%;background:var(--content-bgcolor);box-shadow:4px 0 24px rgba(0,0,0,.25);z-index:9999;transition:left .3s;overflow-y:auto}
+    .sidr.sidr-open{left:0}
+    .sidr-class-gmr-logo-wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border-color)}
+    .sidr ul li a{display:flex;align-items:center;gap:12px;padding:12px 18px;color:var(--main-color);border-bottom:1px solid var(--border-color);font-size:13px}
+    .gmr-ontop{position:fixed;bottom:24px;right:24px;width:42px;height:42px;border-radius:50%;background:var(--scheme-color);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.25);cursor:pointer;opacity:0;visibility:hidden;transform:translateY(12px);transition:all .25s;z-index:999}
+    .gmr-ontop.active{opacity:1;visibility:visible;transform:translateY(0)}
+    .site-footer{background:var(--footer-bgcolor);color:var(--footer-color);padding:24px 0;border-top:1px solid var(--border-color);text-align:center;font-size:13px}
+    .footer-menu ul{display:flex;justify-content:center;gap:16px;margin-bottom:10px;flex-wrap:wrap}
+    .footer-menu a{color:var(--footer-linkcolor)}.footer-menu a:hover{color:var(--footer-hover-linkcolor)}
+    .lazy-img{opacity:0;transition:opacity .3s}.lazy-img.lazy-loaded{opacity:1}
+    .screen-reader-text{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+  </style>
+</head>
+<body class="{{ body_class | default('') }}">
+  <a class="screen-reader-text" href="#primary">Skip to content</a>
+  <header class="gmr-topnavwrap" role="banner">
+    <div class="gmr-flex-topnav">
+      <button id="gmr-responsive-menu" class="topnav-button" aria-label="Menu" aria-expanded="false">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+      <a class="gmr-logo-link" href="{{ base }}/">
+        <span class="gmr-logo-badge">{{ site_name[:3] | upper }}</span>
+        <span class="gmr-logo-text">{{ site_name }}</span>
+      </a>
+      <div class="gmr-mainmenu-wrap">
+        <nav class="gmr-mainmenu" aria-label="Menu Utama">
+          <ul>
+            <li><a href="{{ base }}/"><span class="material-symbols-outlined">home</span> Beranda</a></li>
+            <li><a href="{{ base }}/categories"><span class="material-symbols-outlined">category</span> Kategori</a></li>
+            <li><a href="{{ base }}/p/term-of-services"><span class="material-symbols-outlined">description</span> TOS</a></li>
+            <li><a href="{{ base }}/p/disclaimer"><span class="material-symbols-outlined">info</span> Disclaimer</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="pull-right">
+        <div class="gmr-table-search">
+          <form class="gmr-searchform" action="{{ base }}/search" method="get" onsubmit="return goSearch(this)">
+            <label class="screen-reader-text" for="q">Cari</label>
+            <input type="text" id="q" name="q" placeholder="Cari Video..." value="{{ query | default('') }}" required>
+            <button type="submit" class="gmr-search-submit" aria-label="Cari"><span class="material-symbols-outlined">search</span></button>
+          </form>
+        </div>
+        <button id="darkmode-toggle" class="topnav-button" aria-label="Dark mode"><span class="material-symbols-outlined dark-mode-icon">dark_mode</span></button>
+      </div>
+    </div>
+  </header>
+
+  <div id="content">{% block content %}{% endblock %}</div>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <nav class="footer-menu">
+        <ul>
+          <li><a href="{{ base }}/">Beranda</a></li>
+          <li><a href="{{ base }}/categories">Kategori</a></li>
+          <li><a href="{{ base }}/p/term-of-services">TOS</a></li>
+          <li><a href="{{ base }}/p/disclaimer">Disclaimer</a></li>
+        </ul>
+      </nav>
+      <div>&copy; {{ 2026 }} {{ site_name }}. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <div id="sidr-overlay" class="sidr-overlay"></div>
+  <aside id="sidr-mobile" class="sidr" role="dialog" aria-label="Menu Mobile">
+    <div class="sidr-class-gmr-logo-wrap">
+      <div><span class="gmr-logo-badge">{{ site_name[:3] | upper }}</span> <strong style="margin-left:6px">{{ site_name }}</strong></div>
+      <button id="close-sidr-btn" style="background:0;border:0;cursor:pointer;color:var(--main-color)" aria-label="Tutup"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="{{ base }}/"><span class="material-symbols-outlined">home</span> Beranda</a></li>
+        <li><a href="{{ base }}/categories"><span class="material-symbols-outlined">category</span> Kategori</a></li>
+        <li><a href="{{ base }}/p/term-of-services"><span class="material-symbols-outlined">description</span> TOS</a></li>
+        <li><a href="{{ base }}/p/disclaimer"><span class="material-symbols-outlined">info</span> Disclaimer</a></li>
+      </ul>
+    </nav>
+  </aside>
+  <div id="scroll-to-top" class="gmr-ontop" role="button" tabindex="0" aria-label="Ke atas"><span class="material-symbols-outlined">keyboard_arrow_up</span></div>
+
+  <script>
+  function goSearch(form){
+    var q=(form.q||form.s).value.trim();if(!q)return false;
+    var slug=q.toLowerCase().replace(/[^\w\s-]/g,'').replace(/\s+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+    location.href='{{ base }}/f/'+encodeURIComponent(slug);return false;
+  }
+  (function(){
+    var fb="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='360'%3E%3Crect fill='%23222d34' width='100%25' height='100%25'/%3E%3Cpath d='M300 150 L350 180 L300 210 Z' fill='%23fff' opacity='.7'/%3E%3C/svg%3E";
+    window.addEventListener('error',function(e){if(e.target&&e.target.tagName==='IMG'){e.target.onerror=null;e.target.src=fb;e.target.classList.add('lazy-loaded');}},true);
+    function setupLazy(){
+      var imgs=document.querySelectorAll('img.lazy-img:not(.lazy-loaded)');
+      if('IntersectionObserver' in window){
+        var io=new IntersectionObserver(function(ents){ents.forEach(function(en){if(!en.isIntersecting)return;var img=en.target;if(img.dataset.src)img.src=img.dataset.src;img.onload=function(){img.classList.add('lazy-loaded')};img.onerror=function(){this.src=fb;this.classList.add('lazy-loaded')};io.unobserve(img);});},{rootMargin:'200px'});
+        imgs.forEach(function(i){io.observe(i);});
+      } else {imgs.forEach(function(img){if(img.dataset.src)img.src=img.dataset.src;img.classList.add('lazy-loaded');});}
+    }
+    document.addEventListener('DOMContentLoaded',function(){
+      setupLazy();
+      var btn=document.getElementById('darkmode-toggle'),icon=document.querySelector('.dark-mode-icon');
+      if(localStorage.getItem('theme')==='dark'){document.body.classList.add('dark-theme');if(icon)icon.textContent='light_mode';}
+      if(btn)btn.onclick=function(e){e.preventDefault();var d=document.body.classList.toggle('dark-theme');localStorage.setItem('theme',d?'dark':'light');if(icon)icon.textContent=d?'light_mode':'dark_mode';};
+      var st=document.getElementById('scroll-to-top');
+      window.addEventListener('scroll',function(){st&&st.classList.toggle('active',scrollY>200);},{passive:true});
+      if(st)st.onclick=function(){scrollTo({top:0,behavior:'smooth'});};
+      var openB=document.getElementById('gmr-responsive-menu'),closeB=document.getElementById('close-sidr-btn'),sidr=document.getElementById('sidr-mobile'),ov=document.getElementById('sidr-overlay');
+      function open(){sidr.classList.add('sidr-open');ov.classList.add('active');document.body.style.overflow='hidden';}
+      function close(){sidr.classList.remove('sidr-open');ov.classList.remove('active');document.body.style.overflow='';}
+      if(openB)openB.onclick=function(e){e.preventDefault();sidr.classList.contains('sidr-open')?close():open();};
+      if(closeB)closeB.onclick=function(e){e.preventDefault();close();};
+      if(ov)ov.onclick=close;
+    });
+  })();
+  </script>
+</body>
+</html>

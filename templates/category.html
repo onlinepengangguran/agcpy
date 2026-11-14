@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="gmr-content">
+  <div class="container">
+    <h1 class="page-title">{{ category_name }}</h1>
+    {% if not slug %}
+    <div class="tags">
+      {% for c in categories %}<a class="tag" href="{{ category_url(c) }}">{{ c }}</a>{% endfor %}
+    </div>
+    {% else %}
+    <section class="row">
+      {% if not items %}
+      <p style="color:var(--content-greycolor)">Belum ada video di kategori ini.</p>
+      {% else %}
+      {% for v in items %}
+      <article class="col-md-grid post">
+        <div class="box-item">
+          <a class="post-thumbnail" href="{{ download_url(v.title, v.id) }}">
+            {% if v.thumb %}<img class="lazy-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 225'%3E%3C/svg%3E" data-src="{{ v.thumb }}" alt="{{ v.title }}" loading="lazy">{% endif %}
+            <span class="gmr-format"><span class="material-symbols-outlined">play_circle</span></span>
+            {% if v.duration %}<span class="duration">{{ v.duration }}</span>{% endif %}
+          </a>
+          <div class="box-content">
+            <h2 class="entry-title"><a href="{{ download_url(v.title, v.id) }}">{{ v.title }}</a></h2>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+      {% endif %}
+    </section>
+    {% if paging %}
+    <div class="pagination">
+      {% for p in paging %}
+        {% if p.active %}<span class="active">{{ p.label }}</span>
+        {% else %}<a href="{{ p.url }}">{{ p.label }}</a>{% endif %}
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

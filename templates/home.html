@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+{% block content %}
+{% if page == 1 and slider %}
+<section class="header-slide" aria-label="Video unggulan">
+  <div class="container">
+    <div class="slider-track">
+      {% for v in slider %}
+      <div class="slider-item">
+        <a class="post-thumbnail" href="{{ download_url(v.title, v.id) }}">
+          {% if v.thumb %}<img class="lazy-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 225'%3E%3C/svg%3E" data-src="{{ v.thumb }}" alt="{{ v.title }}" loading="lazy">{% endif %}
+          <span class="gmr-format"><span class="material-symbols-outlined">play_circle</span></span>
+          {% if v.duration %}<span class="duration"><span class="material-symbols-outlined">schedule</span> {{ v.duration }}</span>{% endif %}
+          <h3 class="list-gallery-title">{{ v.title }}</h3>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<div class="gmr-content">
+  <div class="container">
+    <div class="row">
+      <main id="primary" class="col-md-9" role="main">
+        <h1 class="page-title">{{ site_name }} — Video Terbaru</h1>
+        {% if recent %}
+        <div class="tags">
+          {% for q in recent %}<a class="tag" href="{{ search_url(q) }}">{{ q }}</a>{% endfor %}
+        </div>
+        {% endif %}
+        <section class="row">
+          {% if not videos %}
+          <p style="padding:16px;color:var(--content-greycolor)">Belum ada video. Coba cari sesuatu.</p>
+          {% else %}
+          {% for v in videos %}
+          <article class="col-md-grid post">
+            <div class="box-item">
+              <a class="post-thumbnail" href="{{ download_url(v.title, v.id) }}">
+                {% if v.thumb %}<img class="lazy-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 225'%3E%3C/svg%3E" data-src="{{ v.thumb }}" alt="{{ v.title }}" loading="lazy">{% endif %}
+                <span class="gmr-format"><span class="material-symbols-outlined">play_circle</span></span>
+                {% if v.duration %}<span class="duration"><span class="material-symbols-outlined">schedule</span> {{ v.duration }}</span>{% endif %}
+                {% if v.views %}<span class="view-on-image"><span class="material-symbols-outlined">visibility</span> {{ v.views }}</span>{% endif %}
+              </a>
+              <div class="box-content">
+                <h2 class="entry-title"><a href="{{ download_url(v.title, v.id) }}">{{ v.title }}</a></h2>
+                <div class="meta-content">{{ v.size or 'HD' }}{% if v.duration %} · {{ v.duration }}{% endif %}</div>
+              </div>
+            </div>
+          </article>
+          {% endfor %}
+          {% endif %}
+        </section>
+        {% if paging %}
+        <div class="pagination">
+          {% for p in paging %}
+            {% if p.active %}<span class="active">{{ p.label }}</span>
+            {% else %}<a href="{{ p.url }}">{{ p.label }}</a>{% endif %}
+          {% endfor %}
+        </div>
+        {% endif %}
+      </main>
+      <aside class="col-md-3 pos-sticky" role="complementary">
+        <section class="widget">
+          <h3 class="widget-title">Popular Post</h3>
+          <ul class="vidpro-rp-widget">
+            {% for v in popular %}
+            <li>
+              <a class="post-thumbnail" href="{{ download_url(v.title, v.id) }}">
+                {% if v.thumb %}<img class="lazy-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 90'%3E%3C/svg%3E" data-src="{{ v.thumb }}" alt="" loading="lazy">{% endif %}
+                {% if v.duration %}<span class="duration">{{ v.duration }}</span>{% endif %}
+              </a>
+              <div class="recent-content">
+                <a class="recent-title" href="{{ download_url(v.title, v.id) }}">{{ v.title }}</a>
+                <div class="meta-content">{{ v.size or 'HD' }}</div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </section>
+      </aside>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.py[cod]
+cache/
+store/agc.db
+store/searches.json
+*.zip

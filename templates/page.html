@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="gmr-content">
+  <div class="container" style="max-width:720px">
+    <h1 class="page-title">{{ heading }}</h1>
+    <div style="color:var(--content-greycolor);line-height:1.7">
+      {{ body_html | safe }}
+      <p style="margin-top:20px"><a href="{{ base }}/">← Beranda</a></p>
+    </div>
+  </div>
+</div>
+{% endblock %}
